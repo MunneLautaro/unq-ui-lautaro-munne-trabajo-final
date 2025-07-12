@@ -1,32 +1,48 @@
 import { useEffect, useState } from "react";
-import {
-  getDifficults,
-  getGameSessionByDifficultyId,
-  checkWord,
-} from "../services/gameServices";
-import MyButton from "../component/UI/MyButton";
+import { getDifficults, checkWord } from "../services/gameServices";
 import Grid from "../component/Grid/Grid";
 import Form from "../component/Form/Form";
+import DifficultySelector from "../component/DifficultySelector/DifficultySelector";
+import { ToastContainer, toast } from "react-toastify";
+import { validateWord } from "../utilities/validateWord";
 
 export default function Home() {
   const [dificulties, setDificulties] = useState([]);
   const [session, setSession] = useState(null);
   const [word, setWord] = useState("");
   const [guesses, setGuesses] = useState([]);
-  const [wordLenght, setWordLenght] = useState(5);
+  const [wordLenght, setWordLenght] = useState(4);
+  const [isWinner, setIsWinner] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (!word || !session) return;
 
-    setGuesses((prevGuesses) => [...prevGuesses, word]);
-
+    const errorMsg = validateWord({ word, wordLenght, session });
+    if (errorMsg) {
+      toast.error(errorMsg);
+      return;
+    }
     checkWord({ sessionId: session, word })
       .then((res) => {
-        console.log("Respuesta de la API:", res);
+        setGuesses((prevGuesses) => {
+          const updated = [...prevGuesses, res];
+
+          const won = res.every(
+            (letterObj) => letterObj.solution === "correct"
+          );
+          if (won) {
+            setIsWinner(true);
+            setIsGameOver(true);
+          } else if (updated.length >= 6) {
+            setIsGameOver(true);
+          }
+
+          return updated;
+        });
       })
       .catch((error) => {
-        console.log("Error:", error);
+        toast.error(error);
       });
 
     setWord("");
@@ -35,53 +51,49 @@ export default function Home() {
   useEffect(() => {
     getDifficults()
       .then((res) => setDificulties(res))
-      .catch((error) => console.error(error));
+      .catch((error) => toast.error(error));
   }, []);
 
   useEffect(() => {
-    console.log(dificulties);
-    console.log({ session });
-  }, [dificulties, session]);
+    setGuesses([]);
+    setWord("");
+    setIsWinner(false);
+    setIsGameOver(false);
+  }, [session]);
 
   return (
     <>
       <div className="flex flex-col">
         <div className="flex justify-center items-center flex-col">
           <div className="flex">
-            {dificulties.map((dif) => (
-              <div className="flex items-center" key={dif.id}>
-                <MyButton
-                  bKey={dif.id}
-                  bOnClick={() => {
-                    getGameSessionByDifficultyId(dif.id).then((session) => {
-                      setSession(session.sessionId);
-                      setWordLenght(session.wordLenght);
-                      console.log(session);
-                    });
-                    console.log(session);
-                  }}
-                  bText={dif.name}
-                />
-              </div>
-            ))}
+            <DifficultySelector
+              difficulties={dificulties}
+              setSession={setSession}
+              setWordLenght={setWordLenght}
+            />
           </div>
           <Grid guesses={guesses} cols={wordLenght} currentWord={word} />
-          <Form onSubmit={onSubmit} word={word} setWord={setWord} />
+
+          {!session ? (
+            <p className="text-violet-500 font-bold text-xl mt-4 underline">
+              Select a difficulty to play!
+            </p>
+          ) : !isGameOver ? (
+            <Form
+              onSubmit={onSubmit}
+              word={word}
+              setWord={setWord}
+              maxLength={wordLenght}
+              minLength={wordLenght}
+            />
+          ) : isWinner ? (
+            <p className="text-green-500 font-bold text-xl mt-4">You won!</p>
+          ) : (
+            <p className="text-red-500 font-bold text-xl mt-4">You lost!</p>
+          )}
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }
-/*
-<form className="flex flex-col items-center" onSubmit={onSubmit}>
-            <input
-              className="bg-black text-white"
-              placeholder="palabra"
-              onChange={(e) => {
-                setWord(e.target.value);
-              }}
-            />
-
-            <MyButton bType={"submit"} bText={"Responder"} />
-          </form>
-*/

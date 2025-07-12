@@ -1,6 +1,8 @@
 import axios from "axios";
 import { API, ROUTES_API } from "../constants";
 
+import { errorMessage } from "../utilities/error_message";
+
 const api = axios.create({
   baseURL: API.BASE_URL,
 });
@@ -10,8 +12,7 @@ const getDifficults = () => {
     .get(ROUTES_API.DIFFICULTIES)
     .then((response) => response?.data)
     .catch((error) => {
-      console.log(error);
-      error;
+      throw errorMessage(error);
     });
 };
 
@@ -34,8 +35,7 @@ const checkWord = ({ sessionId, word }) => {
     .post(ROUTES_API.CHECK_WORD, { sessionId, word })
     .then((response) => response?.data)
     .catch((error) => {
-      console.error("Error al verificar palabra:", error);
-      return error;
+      throw errorMessage(error);
     });
 };
 
