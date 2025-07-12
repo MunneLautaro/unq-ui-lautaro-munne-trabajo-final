@@ -8,4 +8,5 @@ export const ROUTES = {
 
 export const ROUTES_API = {
   DIFFICULTIES: "/difficulties",
+  CHECK_WORD: "/checkWord",
 };

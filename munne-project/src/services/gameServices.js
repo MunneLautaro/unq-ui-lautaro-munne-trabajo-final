@@ -5,7 +5,7 @@ const api = axios.create({
   baseURL: API.BASE_URL,
 });
 
-export const getDifficults = () => {
+const getDifficults = () => {
   return api
     .get(ROUTES_API.DIFFICULTIES)
     .then((response) => response?.data)
@@ -14,3 +14,29 @@ export const getDifficults = () => {
       error;
     });
 };
+
+const getGameSessionByDifficultyId = (id) => {
+  return api
+    .get(`${ROUTES_API.DIFFICULTIES}/${id}`)
+    .then((response) => response?.data)
+    .catch((error) => {
+      if (error.response?.status === 404) {
+        console.error("Dificultad no encontrada (404)");
+      } else {
+        console.error(error);
+      }
+      return error;
+    });
+};
+
+const checkWord = ({ sessionId, word }) => {
+  return api
+    .post(ROUTES_API.CHECK_WORD, { sessionId, word })
+    .then((response) => response?.data)
+    .catch((error) => {
+      console.error("Error al verificar palabra:", error);
+      return error;
+    });
+};
+
+export { getDifficults, getGameSessionByDifficultyId, checkWord };
