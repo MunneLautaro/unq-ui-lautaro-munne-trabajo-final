@@ -1,10 +1,16 @@
-import { useEffect, useState } from "react";
-import { getDifficults, checkWord } from "../services/gameServices";
-import Grid from "../component/Grid/Grid";
-import Form from "../component/Form/Form";
 import DifficultySelector from "../component/DifficultySelector/DifficultySelector";
+import Form from "../component/Form/Form";
+import Grid from "../component/Grid/Grid";
+import GameResult from "../component/GameResult/GameResult";
+import Loader from "../component/Loader/Loader";
+
+import { getDifficults, checkWord } from "../services/gameServices";
+
 import { ToastContainer, toast } from "react-toastify";
-import { validateWord } from "../utilities/validateWord";
+
+import { useEffect, useState } from "react";
+
+import { validateWord, restartGame } from "../utilities/index";
 
 export default function Home() {
   const [dificulties, setDificulties] = useState([]);
@@ -14,6 +20,7 @@ export default function Home() {
   const [wordLenght, setWordLenght] = useState(4);
   const [isWinner, setIsWinner] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -23,6 +30,9 @@ export default function Home() {
       toast.error(errorMsg);
       return;
     }
+
+    setIsLoading(true);
+
     checkWord({ sessionId: session, word })
       .then((res) => {
         setGuesses((prevGuesses) => {
@@ -43,6 +53,9 @@ export default function Home() {
       })
       .catch((error) => {
         toast.error(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
 
     setWord("");
@@ -79,21 +92,33 @@ export default function Home() {
               Select a difficulty to play!
             </p>
           ) : !isGameOver ? (
-            <Form
-              onSubmit={onSubmit}
-              word={word}
-              setWord={setWord}
-              maxLength={wordLenght}
-              minLength={wordLenght}
-            />
-          ) : isWinner ? (
-            <p className="text-green-500 font-bold text-xl mt-4">You won!</p>
+            isLoading ? (
+              <Loader />
+            ) : (
+              <Form
+                onSubmit={onSubmit}
+                word={word}
+                setWord={setWord}
+                wordLength={wordLenght}
+              />
+            )
           ) : (
-            <p className="text-red-500 font-bold text-xl mt-4">You lost!</p>
+            <GameResult
+              isWinner={isWinner}
+              onRestart={() => {
+                restartGame({
+                  setSession,
+                  setGuesses,
+                  setWord,
+                  setIsWinner,
+                  setIsGameOver,
+                });
+              }}
+            />
           )}
         </div>
       </div>
-      <ToastContainer />
+      <ToastContainer theme="dark" />
     </>
   );
 }

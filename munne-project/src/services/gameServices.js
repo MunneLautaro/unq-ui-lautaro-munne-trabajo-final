@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API, ROUTES_API } from "../constants";
 
-import { errorMessage } from "../utilities/error_message";
+import { errorMessage } from "../utilities/index";
 
 const api = axios.create({
   baseURL: API.BASE_URL,
@@ -21,12 +21,7 @@ const getGameSessionByDifficultyId = (id) => {
     .get(`${ROUTES_API.DIFFICULTIES}/${id}`)
     .then((response) => response?.data)
     .catch((error) => {
-      if (error.response?.status === 404) {
-        console.error("Dificultad no encontrada (404)");
-      } else {
-        console.error(error);
-      }
-      return error;
+      throw errorMessage(error);
     });
 };
 

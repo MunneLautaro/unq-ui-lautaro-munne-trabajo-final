@@ -1,6 +1,6 @@
 import MyButton from "../UI/MyButton";
 
-export default function Form({ onSubmit, word, setWord, maxLength }) {
+export default function Form({ onSubmit, word, setWord, wordLength }) {
   return (
     <form className="flex flex-col items-center" onSubmit={onSubmit}>
       <input
@@ -8,7 +8,9 @@ export default function Form({ onSubmit, word, setWord, maxLength }) {
         placeholder="Word..."
         value={word}
         onChange={(e) => setWord(e.target.value.toLocaleLowerCase())}
-        maxLength={maxLength}
+        maxLength={wordLength}
+        minLength={wordLength}
+        autoFocus
       />
       <MyButton bType="submit" bText="Answer" />
     </form>

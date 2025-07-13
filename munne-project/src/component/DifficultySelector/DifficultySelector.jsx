@@ -1,5 +1,6 @@
 import MyButton from "../UI/MyButton";
 import { getGameSessionByDifficultyId } from "../../services/gameServices";
+import { toast } from "react-toastify";
 
 export default function DifficultySelector({
   difficulties,
@@ -7,10 +8,14 @@ export default function DifficultySelector({
   setWordLenght,
 }) {
   const handleClick = (difId) => {
-    getGameSessionByDifficultyId(difId).then((session) => {
-      setSession(session.sessionId);
-      setWordLenght(session.wordLenght);
-    });
+    getGameSessionByDifficultyId(difId)
+      .then((session) => {
+        setSession(session.sessionId);
+        setWordLenght(session.wordLenght);
+      })
+      .catch((error) => {
+        toast(`Dificulty selector error: ${error}`);
+      });
   };
 
   return (
