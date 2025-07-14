@@ -1,10 +1,14 @@
 import DifficultySelector from "../component/DifficultySelector/DifficultySelector";
 import Form from "../component/Form/Form";
 import Grid from "../component/Grid/Grid";
-import GameResult from "../component/GameResult/GameResult";
 import Loader from "../component/Loader/Loader";
+import GameResult from "../component/GameResult/GameResult";
 
-import { getDifficults, checkWord } from "../services/gameServices";
+import {
+  getDifficults,
+  checkWord,
+  getGameSessionByDifficultyId,
+} from "../services/gameServices";
 
 import { ToastContainer, toast } from "react-toastify";
 
@@ -18,9 +22,25 @@ export default function Home() {
   const [word, setWord] = useState("");
   const [guesses, setGuesses] = useState([]);
   const [wordLenght, setWordLenght] = useState(4);
-  const [isWinner, setIsWinner] = useState(false);
-  const [isGameOver, setIsGameOver] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentDifficult, setCurrentDifficult] = useState(1);
+
+  useEffect(() => {
+    getDifficults()
+      .then((res) => {
+        setDificulties(res);
+      })
+      .catch((error) => toast.error(error));
+
+    getGameSessionByDifficultyId(currentDifficult)
+      .then((session) => {
+        setSession(session.sessionId);
+        setWordLenght(session.wordLenght);
+      })
+      .catch((error) => {
+        toast(`Dificulty selector error: ${error}`);
+      });
+  }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -35,21 +55,7 @@ export default function Home() {
 
     checkWord({ sessionId: session, word })
       .then((res) => {
-        setGuesses((prevGuesses) => {
-          const updated = [...prevGuesses, res];
-
-          const won = res.every(
-            (letterObj) => letterObj.solution === "correct"
-          );
-          if (won) {
-            setIsWinner(true);
-            setIsGameOver(true);
-          } else if (updated.length >= 6) {
-            setIsGameOver(true);
-          }
-
-          return updated;
-        });
+        setGuesses((prevGuesses) => [...prevGuesses, res]);
       })
       .catch((error) => {
         toast.error(error);
@@ -62,36 +68,47 @@ export default function Home() {
   };
 
   useEffect(() => {
-    getDifficults()
-      .then((res) => setDificulties(res))
-      .catch((error) => toast.error(error));
-  }, []);
-
-  useEffect(() => {
     setGuesses([]);
     setWord("");
-    setIsWinner(false);
-    setIsGameOver(false);
   }, [session]);
+
+  const hasWon =
+    guesses.length > 0 &&
+    guesses[guesses.length - 1].every(
+      (letter) => letter.solution === "correct"
+    );
+
+  const hasAttemptsLeft = guesses.length < 6;
 
   return (
     <>
-      <div className="flex flex-col">
-        <div className="flex justify-center items-center flex-col">
-          <div className="flex">
-            <DifficultySelector
-              difficulties={dificulties}
-              setSession={setSession}
-              setWordLenght={setWordLenght}
-            />
-          </div>
+      <div className="flex flex-col items-center px-4 py-6 min-h-screen">
+        <div className="w-full max-w-[600px] flex flex-col items-center gap-4">
+          <DifficultySelector
+            difficulties={dificulties}
+            setSession={setSession}
+            setWordLenght={setWordLenght}
+            setCurrentDifficult={setCurrentDifficult}
+            isLoading={isLoading}
+          />
+
           <Grid guesses={guesses} cols={wordLenght} currentWord={word} />
 
-          {!session ? (
-            <p className="text-violet-500 font-bold text-xl mt-4 underline">
-              Select a difficulty to play!
-            </p>
-          ) : !isGameOver ? (
+          {hasWon ? (
+            <GameResult
+              message="You won!"
+              isWin={true}
+              onRestart={() =>
+                restartGame({
+                  setSession,
+                  setGuesses,
+                  setWord,
+                  currentDifficult,
+                  setWordLenght,
+                })
+              }
+            />
+          ) : hasAttemptsLeft ? (
             isLoading ? (
               <Loader />
             ) : (
@@ -104,20 +121,22 @@ export default function Home() {
             )
           ) : (
             <GameResult
-              isWinner={isWinner}
-              onRestart={() => {
+              message="You Lost!"
+              isWin={false}
+              onRestart={() =>
                 restartGame({
                   setSession,
                   setGuesses,
                   setWord,
-                  setIsWinner,
-                  setIsGameOver,
-                });
-              }}
+                  currentDifficult,
+                  setWordLenght,
+                })
+              }
             />
           )}
         </div>
       </div>
+
       <ToastContainer theme="dark" />
     </>
   );

@@ -1,16 +1,16 @@
 import MyButton from "../UI/MyButton";
 
-export default function GameResult({ isWinner, onRestart }) {
+export default function GameResult({ message, isWin, onRestart }) {
   return (
-    <div className="flex flex-col items-center gap-4 mt-4">
+    <>
       <p
         className={`font-bold text-xl ${
-          isWinner ? "text-green-500" : "text-red-500"
+          isWin ? "text-green-500" : "text-red-500"
         }`}
       >
-        {isWinner ? "You won!" : "You lost!"}
+        {message}
       </p>
-      <MyButton bOnClick={onRestart} bText={"Play again"} />
-    </div>
+      <MyButton bOnClick={onRestart} bText="Restart" />
+    </>
   );
 }

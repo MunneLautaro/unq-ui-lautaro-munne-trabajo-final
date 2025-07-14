@@ -6,8 +6,11 @@ export default function DifficultySelector({
   difficulties,
   setSession,
   setWordLenght,
+  setCurrentDifficult,
+  isLoading,
 }) {
   const handleClick = (difId) => {
+    setCurrentDifficult(difId);
     getGameSessionByDifficultyId(difId)
       .then((session) => {
         setSession(session.sessionId);
@@ -27,6 +30,7 @@ export default function DifficultySelector({
               bKey={dif.id}
               bOnClick={() => handleClick(dif.id)}
               bText={dif.name}
+              disabled={isLoading}
             />
           </div>
         ))}

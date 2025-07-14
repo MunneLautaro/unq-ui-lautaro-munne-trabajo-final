@@ -1,8 +1,7 @@
 export default function Grid({ guesses, cols, currentWord }) {
   const rows = 6;
-  const currentGuesses = [...guesses];
+  const currentGuesses = [...(guesses || [])];
 
-  // Si hay espacio, agregá la palabra que se está escribiendo
   if (currentGuesses.length < rows) {
     currentGuesses.push(
       currentWord.split("").map((letter) => ({ letter, solution: null }))
@@ -10,12 +9,12 @@ export default function Grid({ guesses, cols, currentWord }) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-[5px] p-[10px]">
+    <div className="flex flex-col items-center gap-2 p-4 overflow-x-auto">
       {Array.from({ length: rows }).map((_, rowIndex) => {
         const row = currentGuesses[rowIndex] || [];
 
         return (
-          <div key={rowIndex} className="flex gap-[5px]">
+          <div key={rowIndex} className="flex gap-2 justify-center min-w-fit">
             {Array.from({ length: cols }).map((_, colIndex) => {
               const cell = row[colIndex] || { letter: "", solution: null };
               const { letter, solution } = cell;
@@ -28,7 +27,8 @@ export default function Grid({ guesses, cols, currentWord }) {
               return (
                 <div
                   key={`${rowIndex}-${colIndex}`}
-                  className={`flex justify-center items-center w-[60px] h-[60px] border-gray-500 border-2 text-lg font-bold uppercase text-white ${bgColor}`}
+                  className={`flex justify-center items-center text-sm sm:text-base font-bold uppercase text-white border-2 border-gray-500
+                    w-10 h-10 sm:w-14 sm:h-14 ${bgColor}`}
                 >
                   {letter}
                 </div>
@@ -40,43 +40,3 @@ export default function Grid({ guesses, cols, currentWord }) {
     </div>
   );
 }
-
-/*
-
-*/
-
-/*
-export default function Grid({ guesses, cols, currentWord }) {
-  const rows = 6;
-  const currentGuesses = [...guesses];
-
-  if (currentGuesses.length < rows) {
-    currentGuesses.push(currentWord);
-  }
-
-  return (
-    <div className="flex flex-col items-center gap-[5px] p-[10px]">
-      {Array(rows)
-        .fill()
-        .map((_, rowIndex) => {
-          return (
-            <div key={rowIndex} className="flex gap-[5px]">
-              {Array(cols)
-                .fill()
-                .map((_, colIndex) => {
-                  const letter = currentGuesses[rowIndex]?.[colIndex] || "";
-                  return (
-                    <div
-                      key={`${rowIndex}-${colIndex}`}
-                      className="flex justify-center items-center w-[60px] h-[60px] border-gray-500 border-2 text-lg font-bold uppercase text-white"
-                    >
-                      {letter}
-                    </div>
-                  );
-                })}
-            </div>
-          );
-        })}
-    </div>
-  );
-*/
