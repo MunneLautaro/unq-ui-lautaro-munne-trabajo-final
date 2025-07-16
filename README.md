@@ -19,6 +19,7 @@ Utiliza la API provista por la cátedra para:
 
 1.  Ejecuta el proyecto: `npm run dev` desde tu terminal.
 2.  En tu navegador accede a `http://localhost:5173/`.
+3.  3.  Ya estas listo para jugar!.
 
 ## Tecnologías utilizadas
 
