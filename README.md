@@ -5,13 +5,13 @@
 Este proyecto es un clon del juego **Wordle**, desarrollado utilizando **React + Vite**.
 Utiliza la API provista por la cátedra para:
 
-## Requisitos previos
-
-- Debés tener Node.js instalado en tu computadora.
-
 - conseguir las dificultades disponibles.
 - seleccionar una dificultad a gusto(dentro de las disponibles).
 - validar las palabras ingresadas por el usuario.
+
+## Requisitos previos
+
+- Debés tener Node.js instalado en tu computadora.
 
 ## Instalación
 
