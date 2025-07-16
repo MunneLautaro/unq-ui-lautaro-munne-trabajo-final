@@ -1,12 +1,28 @@
-# React + Vite
+# TP final UI 2025: Wordle
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Descripción
 
-Currently, two official plugins are available:
+Este proyecto es un clon del juego **Wordle**, desarrollado utilizando **React + Vite**.
+Utiliza la API provista por la cátedra para:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- conseguir las dificultades disponibles.
+- seleccionar una dificultad a gusto(dentro de las disponibles).
+- validar las palabras ingresadas por el usuario.
 
-## Expanding the ESLint configuration
+## Instalación
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1.  Clona el repositorio: `git clone https://github.com/MunneLautaro/unq-ui-lautaro-munne-trabajo-final.git` dentro de la carpeta que prefieras.
+2.  Abrí la carpeta donde clonaste el repositorio desde el Visual Studio Code.
+3.  Instala las dependencias: `npm install` o `npm i` .
+
+## Ejecucion local
+
+1.  Ejecuta el proyecto: `npm run dev` desde tu terminal.
+2.  En tu navegador accede a `http://localhost:5173/`.
+
+## Tecnologías utilizadas
+
+- Vite
+- JavaScript
+- React
+- Tailwind

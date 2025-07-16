@@ -40,7 +40,7 @@ export default function Home() {
       .catch((error) => {
         toast(`Dificulty selector error: ${error}`);
       });
-  }, []);
+  }, [currentDifficult]);
 
   const onSubmit = (e) => {
     e.preventDefault();
