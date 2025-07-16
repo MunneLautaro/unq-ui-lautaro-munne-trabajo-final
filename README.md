@@ -15,7 +15,7 @@ Utiliza la API provista por la cátedra para:
 2.  Abrí la carpeta donde clonaste el repositorio desde el Visual Studio Code.
 3.  Instala las dependencias: `npm install` o `npm i` .
 
-## Ejecucion local
+## Ejecución local
 
 1.  Ejecuta el proyecto: `npm run dev` desde tu terminal.
 2.  En tu navegador accede a `http://localhost:5173/`.
