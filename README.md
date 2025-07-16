@@ -13,13 +13,13 @@ Utiliza la API provista por la cátedra para:
 
 1.  Clona el repositorio: `git clone https://github.com/MunneLautaro/unq-ui-lautaro-munne-trabajo-final.git` dentro de la carpeta que prefieras.
 2.  Abrí la carpeta donde clonaste el repositorio desde el Visual Studio Code.
-3.  Instala las dependencias: `npm install` o `npm i` .
+3.  Una vez dentro de la carpeta `munne-project` instala las dependencias con: `npm install` o `npm i` .
 
 ## Ejecución local
 
 1.  Ejecuta el proyecto: `npm run dev` desde tu terminal.
 2.  En tu navegador accede a `http://localhost:5173/`.
-3.  3.  Ya estas listo para jugar!.
+3.  Ya estas listo para jugar!.
 
 ## Tecnologías utilizadas
 
